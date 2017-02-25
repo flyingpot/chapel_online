@@ -1,0 +1,43 @@
+<h1>{{title}}</h1>
+<form action="/process" method="POST">
+    <input type="hidden" name="hush" val="hidden, but not secret!">
+    <div>
+        <p>Your name here:</p>
+        <textarea type="text" name="name"></textarea>
+        <p>Your code here: </p>
+        <textarea type="text" id="chapelCode" name="code"></textarea>
+        <script>
+            // Allow the usage of the tab key when typing in the code box,
+            // rather than unfocusing the element.
+
+            var ta = document.getElementById('chapelCode');
+            ta.onkeydown = function(e) {
+                // if the key was the tab key, and the browser isn't so
+                // prehistoric that it doesn't support selectionStart / selectionEnd
+                if (e.keyCode === 9 && typeof ta.selectionStart !== 'undefined') {
+                    var startPosition = ta.selectionStart;
+                    var endPosition = ta.selectionEnd;
+
+                    // insert spaces
+                    ta.value = (ta.value.substring(0, startPosition) +
+                    '    ' +
+                    ta.value.substring(endPosition, ta.value.length));
+
+                    // move the cursor to after the inserted spaces
+                    ta.selectionStart = ta.selectionEnd = startPosition + 4;
+
+                    // don't unfocus the textarea (the default behaviour of the tab key)
+                    return false;
+                }
+            };
+
+            // spam catch
+            $(document).ready(function(){
+                $("#editor").attr("action", "/");
+            });
+        </script>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
