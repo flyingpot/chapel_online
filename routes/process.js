@@ -4,16 +4,21 @@
 var express = require('express');
 var router = express.Router();
 var fs = require( 'fs' );
-var runResult = '1';
 var runError;
 
 
 /* GET home page. */
 router.post('/', function(req, res, next) {
-    var path = './public/compilefile/' + req.body.name + '.c';
+    // var path = './public/compilefile/' + req.body.name + '.c';
     // path = './public/compilefile/1.c'
-    fs.writeFile(path, req.body.code, callback);
-    console.log(runResult);
+    var path = './public/compilefile/';
+    fs.writeFile(path + req.body.name + '.c', req.body.code, function(err){
+        if(err)
+            console.log('ERROR: '.red + err);
+        else
+            console.log('INFO: '.green + req.body.name +'.c created');
+    });
+    // console.log(runResult);
     var spawn = require('child_process').spawn;
     var compile = spawn('gcc', ['./public/compilefile/' + req.body.name + '.c']);
     compile.stdout.on('data', function (data) {
@@ -45,9 +50,9 @@ router.post('/', function(req, res, next) {
 
 
 
-    function callback(){
-        console.log("callback");
-    }
+    // function callback(){
+    //     console.log("callback");
+    // }
 
 
 });
