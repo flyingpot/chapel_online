@@ -12,7 +12,7 @@ var runError;
 router.post('/', function(req, res, next) {
     var path = './public/compilefile/' + req.body.name + '.c';
     // path = './public/compilefile/1.c'
-    fs.writeFile(path, req.body.code);
+    fs.writeFile(path, req.body.code, callback);
     console.log(runResult);
     var spawn = require('child_process').spawn;
     var compile = spawn('gcc', ['./public/compilefile/' + req.body.name + '.c']);
@@ -45,9 +45,9 @@ router.post('/', function(req, res, next) {
 
 
 
-    // function callback(){
-    //     console.log("callback");
-    // }
+    function callback(){
+        console.log("callback");
+    }
 
 
 });
