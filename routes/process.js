@@ -13,7 +13,7 @@ router.post('/', function(req, res, next) {
     // var path = './public/compilefile/' + req.body.name + '.c';
     // path = './public/compilefile/1.c'
     var path = './public/compilefile/';
-    fs.writeFile(path + req.body.name + '.c', req.body.code, function(err){
+    fs.writeFile(path + req.body.name + '.chpl', req.body.code, function(err){
         if(err)
             console.log('ERROR: '.red + err);
         else
@@ -21,7 +21,7 @@ router.post('/', function(req, res, next) {
     });
     // console.log(runResult);
     var spawn = require('child_process').spawn;
-    var compile = spawn('gcc', ['./public/compilefile/' + req.body.name + '.c']);
+    var compile = spawn('chpl', ['./public/compilefile/' + req.body.name + '.chpl']);
     compile.stdout.on('data', function (data) {
         console.log('stdout: ' + data);
 
