@@ -13,15 +13,23 @@ router.post('/', function(req, res, next) {
     // var path = './public/compilefile/' + req.body.name + '.c';
     // path = './public/compilefile/1.c'
     var path = './public/compilefile/';
-    fs.writeFile(path + req.body.name + '.chpl', req.body.code, function(err){
+    if(req.body.lang === "Chapel"){
+        suffix = 'chpl';
+        compileIns = 'chpl';
+    }
+    else if(req.body.lang === "C"){
+        suffix = 'c';
+        compileIns = 'gcc';
+    }
+    fs.writeFile(path + req.body.name + '.' + suffix, req.body.code, function(err){
         if(err)
             console.log('ERROR: '.red + err);
         else
-            console.log('INFO: '.green + req.body.name +'.c created');
+            console.log('INFO: '.green + req.body.name +'.' + suffix + ' created');
     });
     // console.log(runResult);
     var spawn = require('child_process').spawn;
-    var compile = spawn('chpl', ['./public/compilefile/' + req.body.name + '.chpl']);
+    var compile = spawn(compileIns, ['./public/compilefile/' + req.body.name + '.' + suffix]);
     compile.stdout.on('data', function (data) {
         console.log('stdout: ' + data);
 
