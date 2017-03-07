@@ -5,6 +5,7 @@ var express = require('express');
 var router = express.Router();
 var fs = require( 'fs' );
 var runError;
+var runResult
 
 
 /* GET home page. */
@@ -23,16 +24,17 @@ router.post('/', function(req, res, next) {
     var compile = spawn('gcc', ['./public/compilefile/' + req.body.name + '.c']);
     compile.stdout.on('data', function (data) {
         console.log('stdout: ' + data);
+
     });
     compile.stderr.on('data', function (data) {
         console.log(String(data));
+        res.render('error', {error: String(data)});
     });
     compile.on('close', function (data) {
         if (data === 0) {
             var run = spawn('./a.out', []);
             run.stdout.on('data', function (output) {
                 runResult = String(output);
-                res.render('compileResult', { result: runResult });
                 console.log(runResult);
             });
             run.stderr.on('data', function (output) {
@@ -42,6 +44,7 @@ router.post('/', function(req, res, next) {
             });
             run.on('close', function (output) {
                 console.log('stdout: ' + output);
+                res.render('compileResult', { result: runResult, error: runError});
             })
 
         }
