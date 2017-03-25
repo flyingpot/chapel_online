@@ -5,8 +5,10 @@ This is a GSoC 2017 demo for Chapel. It's a Web service that can compile Chapel 
 ## Prerequisites
 
 - Node.js
+
 v6.10.1 is OK. It is recommended to install Node.js through [nvm](https://github.com/creationix/nvm)
 - Chapel environment
+
 Follow the instruction [here](http://chapel.cray.com/docs/latest/usingchapel/QUICKSTART.html)
 
 ## Installing
