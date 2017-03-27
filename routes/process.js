@@ -4,34 +4,32 @@
 var express = require('express');
 var router = express.Router();
 var fs = require( 'fs' );
+var cuid = require('cuid');
 var runError;
 var runResult
 
 
 /* GET home page. */
 router.post('/', function(req, res) {
-    // var path = './public/compilefile/' + req.body.name + '.c';
-    // path = './public/compilefile/1.c'
     var path = './public/compilefile/';
-    if(req.body.lang === "Chapel"){
+    if(req.body.lang === "Chapel"){ /* judge what lang the user chooses */
         suffix = 'chpl';
         compileIns = 'chpl';
     }
     else if(req.body.lang === "C"){
         suffix = 'c';
         compileIns = 'gcc';
-        console.log(req.body, '111')
     }
-    fs.writeFile(path + req.body.name + '.' + suffix, req.body.code, function(err){
+    var filename = cuid.slug();
+    fs.writeFile(path + filename + '.' + suffix, req.body.code, function(err){
         if(err)
             console.log('ERROR: '.red + err);
         else
-            console.log('INFO: '.green + req.body.name +'.' + suffix + ' created');
+            console.log('INFO: '.green + filename +'.' + suffix + ' created');
     });
     // console.log(runResult);
     var spawn = require('child_process').spawn;
-    // var compile = spawn(compileIns, ['./public/compilefile/' + req.body.name + '.' + suffix]);
-    var compile = spawn(compileIns, ['./public/compilefile/' + req.body.name + '.' + suffix]);
+    var compile = spawn(compileIns, ['./public/compilefile/' + filename + '.' + suffix]);
     compile.stdout.on('data', function (data) {
         console.log('stdout: ' + data);
 
@@ -54,7 +52,7 @@ router.post('/', function(req, res) {
             });
             run.on('close', function (output) {
                 console.log('stdout: ' + output);
-                res.render('compileResult', { result: runResult, error: runError});
+                res.render('compileResult', { result: runResult });
             })
 
         }

@@ -1,8 +1,6 @@
 <h1>{{title}}</h1>
 <form action="/process" method="POST">
     <div>
-        <p>Your name here:</p>
-        <textarea type="text" name="name"></textarea>
         <p>Your code here: </p>
         <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
         <input type="hidden" name="code" id="code"/>
@@ -23,15 +21,17 @@
             function save(){
                 document.getElementById("code").value = editor.getValue();
             }
+            function loadLang(){
+
+            }
         </script>
 
     </div>
-    Language : <select name="lang">
+    Language : <select name="lang" id="lang" onchange="loadLang()">
     <option value="C">C</option>
     <option value="Chapel">Chapel</option>
 </select>
     <div>
         <button type="submit" onclick="save()">Submit</button>
     </div>
-
 </form>
