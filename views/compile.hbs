@@ -1,47 +1,39 @@
 <h1>{{title}}</h1>
 <form action="/process" method="POST">
-    <input type="hidden" name="hush" val="hidden, but not secret!">
     <div>
         <p>Your name here:</p>
         <textarea type="text" name="name"></textarea>
         <p>Your code here: </p>
-        <textarea type="text" id="chapelCode" name="code"></textarea>
+        <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
+        <input type="hidden" name="code" id="code1"/>
+        <script src="../node_modules/monaco-editor/min/vs/loader.js"></script>
         <script>
-            // Allow the usage of the tab key when typing in the code box,
-            // rather than unfocusing the element.
-
-            var ta = document.getElementById('chapelCode');
-            ta.onkeydown = function(e) {
-                // if the key was the tab key, and the browser isn't so
-                // prehistoric that it doesn't support selectionStart / selectionEnd
-                if (e.keyCode === 9 && typeof ta.selectionStart !== 'undefined') {
-                    var startPosition = ta.selectionStart;
-                    var endPosition = ta.selectionEnd;
-
-                    // insert spaces
-                    ta.value = (ta.value.substring(0, startPosition) +
-                    '    ' +
-                    ta.value.substring(endPosition, ta.value.length));
-
-                    // move the cursor to after the inserted spaces
-                    ta.selectionStart = ta.selectionEnd = startPosition + 4;
-
-                    // don't unfocus the textarea (the default behaviour of the tab key)
-                    return false;
-                }
-            };
-
-            // spam catch
-            $(document).ready(function(){
-                $("#editor").attr("action", "/");
+            require.config({ paths: { 'vs': '../node_modules/monaco-editor/min/vs' }});
+            require(['vs/editor/editor.main'], function() {
+                window.editor = monaco.editor.create(document.getElementById('container'), {
+                    value: [
+                        '#include <stdio.h>',
+                        'int main(){',
+                        '\tprintf("Hello world!");',
+                        '}'
+                    ].join('\n'),
+                    language: 'c'
+                });
             });
+            function save(){
+                var value = editor.getValue();
+                document.getElementById("code1").value = value;
+                return document.getElementById("code1").value;
+            }
         </script>
+
     </div>
     Language : <select name="lang">
-    <option value="Chapel">Chapel</option>
     <option value="C">C</option>
+    <option value="Chapel">Chapel</option>
 </select>
     <div>
         <button type="submit">Submit</button>
     </div>
+
 </form>

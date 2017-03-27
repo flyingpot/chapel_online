@@ -9,7 +9,7 @@ var runResult
 
 
 /* GET home page. */
-router.post('/', function(req, res, next) {
+router.post('/', function(req, res) {
     // var path = './public/compilefile/' + req.body.name + '.c';
     // path = './public/compilefile/1.c'
     var path = './public/compilefile/';
@@ -20,6 +20,7 @@ router.post('/', function(req, res, next) {
     else if(req.body.lang === "C"){
         suffix = 'c';
         compileIns = 'gcc';
+        console.log(req.body, '111')
     }
     fs.writeFile(path + req.body.name + '.' + suffix, req.body.code, function(err){
         if(err)
@@ -29,6 +30,7 @@ router.post('/', function(req, res, next) {
     });
     // console.log(runResult);
     var spawn = require('child_process').spawn;
+    // var compile = spawn(compileIns, ['./public/compilefile/' + req.body.name + '.' + suffix]);
     var compile = spawn(compileIns, ['./public/compilefile/' + req.body.name + '.' + suffix]);
     compile.stdout.on('data', function (data) {
         console.log('stdout: ' + data);
@@ -57,15 +59,6 @@ router.post('/', function(req, res, next) {
 
         }
     })
-
-
-
-
-    // function callback(){
-    //     console.log("callback");
-    // }
-
-
 });
 
 module.exports = router;
