@@ -5,7 +5,7 @@
         <textarea type="text" name="name"></textarea>
         <p>Your code here: </p>
         <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
-        <input type="hidden" name="code" id="code1"/>
+        <input type="hidden" name="code" id="code"/>
         <script src="../node_modules/monaco-editor/min/vs/loader.js"></script>
         <script>
             require.config({ paths: { 'vs': '../node_modules/monaco-editor/min/vs' }});
@@ -21,9 +21,7 @@
                 });
             });
             function save(){
-                var value = editor.getValue();
-                document.getElementById("code1").value = value;
-                return document.getElementById("code1").value;
+                document.getElementById("code").value = editor.getValue();
             }
         </script>
 
@@ -33,7 +31,7 @@
     <option value="Chapel">Chapel</option>
 </select>
     <div>
-        <button type="submit">Submit</button>
+        <button type="submit" onclick="save()">Submit</button>
     </div>
 
 </form>
