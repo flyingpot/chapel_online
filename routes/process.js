@@ -20,7 +20,7 @@ router.post('/', function(req, res) {
         suffix = 'c';
         compileIns = 'gcc';
     }
-    var filename = cuid.slug();
+    var filename = cuid.slug(); /* randomly set a filename */
     fs.writeFile(path + filename + '.' + suffix, req.body.code, function(err){
         if(err)
             console.log('ERROR: '.red + err);
@@ -54,7 +54,6 @@ router.post('/', function(req, res) {
                 console.log('stdout: ' + output);
                 res.render('compileResult', { result: runResult });
             })
-
         }
     })
 });
