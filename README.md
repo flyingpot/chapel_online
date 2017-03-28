@@ -2,14 +2,19 @@
 
 This is a GSoC 2017 demo for Chapel. It's a Web service that can compile Chapel on server remotely.
 
+> **Update:**
+> 17/3/27 use Monaco Editor
+> 17/3/28 fulfill streaming stdout
+
 ## Prerequisites
 
 - Node.js
 
-v6.10.1 is OK. It is recommended to install Node.js through [nvm](https://github.com/creationix/nvm)
+ v6.10.1 is OK. It is recommended to install Node.js through [nvm](https://github.com/creationix/nvm)
+
 - Chapel environment
 
-Follow the instruction [here](http://chapel.cray.com/docs/latest/usingchapel/QUICKSTART.html)
+ Follow the instruction [here](http://chapel.cray.com/docs/latest/usingchapel/QUICKSTART.html)
 
 ## Installing
 
@@ -30,3 +35,5 @@ If you want to make it listen to port 80.Do the following:
 sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3000
 sudo iptables-save
 ```
+
+
