@@ -11,8 +11,11 @@
                 window.editor = monaco.editor.create(document.getElementById('container'), {
                     value: [
                         '#include <stdio.h>',
+                        '#include <unistd.h>',
                         'int main(){',
                         '\tprintf("Hello world!");',
+                        '\tsleep(5);',
+                        '\tprintf("Test!");',
                         '}'
                     ].join('\n'),
                     language: 'c'

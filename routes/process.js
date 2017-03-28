@@ -41,19 +41,49 @@ router.post('/', function(req, res) {
     compile.on('close', function (data) {
         if (data === 0) {
 
-            var test = spawn('stdbuf', ['-i0', '-o0', '-e0', './a.out']);
-            test.stdout.on('data', function (data) {
-                console.log('stdout: ' + data);
+            // var test = spawn('stdbuf', ['-i0', '-o0', '-e0', './a.out']);
+            // test.stdout.on('data', function (data) {
+            //     res.send('stdout: ' + data);
+            // });
+            //
+            // test.stderr.on('data', function (data) {
+            //     console.log('stderr: ' + data);
+            // });
+
+            res.writeHead(200, { "Content-Type": "text/event-stream",
+                "Cache-control": "no-cache" });
+
+            var spw = spawn('stdbuf', ['-i0', '-o0', '-e0', './a.out']),
+                str = "";
+
+            spw.stdout.on('data', function (data) {
+                str += data.toString() + '\n';
+
+                // just so we can see the server is doing something
+                console.log("data:" + str);
+
+                // Flush out line by line.
+                var lines = str.split("\n");
+                for(var i in lines) {
+                    if(i == lines.length - 1) {
+                        str = lines[i];
+                    } else{
+                        // Note: The double-newline is *required*
+                        res.write(lines[i] + "\n\n");
+                    }
+                }
             });
 
-            test.stderr.on('data', function (data) {
-                console.log('stderr: ' + data);
+            spw.on('close', function (code) {
+                res.end(str);
             });
 
-// Simulate entering data for getchar() after 1 second
-            setTimeout(function() {
-                test.stdin.write('\n');
-            }, 1000);
+            spw.stderr.on('data', function (data) {
+                res.end('stderr: ' + data);
+            });
+
+
+
             // var run = spawn('./a.out', []);
             // run.stdout.on('data', function (output) {
             //     runResult = String(output);
@@ -70,5 +100,6 @@ router.post('/', function(req, res) {
         }
     })
 });
+
 
 module.exports = router;
