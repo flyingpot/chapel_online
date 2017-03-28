@@ -5,8 +5,8 @@ var express = require('express');
 var router = express.Router();
 var fs = require( 'fs' );
 var cuid = require('cuid');
-var runError;
-var runResult
+
+var runResult;
 
 
 /* GET home page. */
@@ -23,15 +23,15 @@ router.post('/', function(req, res) {
     var filename = cuid.slug(); /* randomly set a filename */
     fs.writeFile(path + filename + '.' + suffix, req.body.code, function(err){
         if(err)
-            console.log('ERROR: '.red + err);
+            console.log(err);
         else
-            console.log('INFO: '.green + filename +'.' + suffix + ' created');
+            console.log(filename +'.' + suffix + ' created');
     });
     // console.log(runResult);
     var spawn = require('child_process').spawn;
     var compile = spawn(compileIns, ['./public/compilefile/' + filename + '.' + suffix]);
     compile.stdout.on('data', function (data) {
-        console.log('stdout: ' + data);
+        console.log('stdout:' + data);
 
     });
     compile.stderr.on('data', function (data) {
@@ -40,20 +40,33 @@ router.post('/', function(req, res) {
     });
     compile.on('close', function (data) {
         if (data === 0) {
-            var run = spawn('./a.out', []);
-            run.stdout.on('data', function (output) {
-                runResult = String(output);
-                console.log(runResult);
+
+            var test = spawn('stdbuf', ['-i0', '-o0', '-e0', './a.out']);
+            test.stdout.on('data', function (data) {
+                console.log('stdout: ' + data);
             });
-            run.stderr.on('data', function (output) {
-                runError = String(output);
-                // res.render('compileResult', { error: runError });
-                console.log(runError);
+
+            test.stderr.on('data', function (data) {
+                console.log('stderr: ' + data);
             });
-            run.on('close', function (output) {
-                console.log('stdout: ' + output);
-                res.render('compileResult', { result: runResult });
-            })
+
+// Simulate entering data for getchar() after 1 second
+            setTimeout(function() {
+                test.stdin.write('\n');
+            }, 1000);
+            // var run = spawn('./a.out', []);
+            // run.stdout.on('data', function (output) {
+            //     runResult = String(output);
+            //     console.log(runResult);
+            // });
+            // run.stderr.on('data', function (err) {
+            //     // res.render('compileResult', { error: runError });
+            //     console.log(err);
+            // });
+            // run.on('close', function (output) {
+            //     res.render('compileResult', { result: runResult });
+            // })
+
         }
     })
 });

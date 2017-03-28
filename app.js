@@ -9,6 +9,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var compileChapel = require('./routes/compileChapel');
 var process = require('./routes/process');
+var test = require('./routes/test');
 
 var app = express();
 
@@ -47,6 +48,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/compile', compileChapel);
 app.use('/process', process);
+app.use('/test', test);
 app.get('*', function(req, res){
   res.render('404', {message: '404 Not Found'});
 });
